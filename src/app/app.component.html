@@ -1,3 +1,121 @@
-<h1>
-  {{title}}
-</h1>
+
+<div class="container">
+    <button 
+        class="btn btn-default btn-primary" 
+        style="margin: 15px" 
+        (click)="showTaskForm()">
+        Add New Task
+    </button>
+
+    <form 
+        [hidden]="!isFormOpen"
+        (ngSubmit)="onSubmit(taskForm.value)" 
+        #taskForm="ngForm" 
+        class="taskForm">
+        <div class="form-group">
+            <label for="id">Task Id</label>
+            <input 
+            type="text" 
+            class="form-control" 
+            id="taskId" 
+            [(ngModel)]="model.taskId"
+            name="taskId"
+            required
+            [disabled]="isUpdate"
+            #taskId="ngModel">
+            <div [hidden]="taskId.valid ||taskId.pristine || taskId.value"
+                class="alert alert-danger">
+                TaskId is required
+            </div>
+        </div>
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input 
+            type="text" 
+            class="form-control" 
+            id="name" 
+            [(ngModel)]="model.name"
+            name="name"
+            required
+            #name="ngModel">
+            <div [hidden]="name.valid || name.pristine"
+                class="alert alert-danger">
+            Name is required
+            </div>
+      </div>
+      <div class="form-group">
+        <label for="status">Status</label>
+        <input 
+            type="text" 
+            class="form-control" 
+            id="status"
+            [(ngModel)]="model.status" 
+            name="status"
+        >
+      </div>
+      <div [hidden]="isUpdate">
+        <button 
+            type="submit" 
+            class="btn btn-success" 
+            [disabled]="!taskForm.form.valid">
+            Submit
+        </button>
+        <button 
+            type="button" 
+            class="btn btn-default btn-warning" 
+            (click)="clearTask(); taskForm.reset()">
+            Clear
+        </button>
+      </div>
+      <div [hidden]="!isUpdate">
+        <button 
+            type="button" 
+            class="btn btn-success" 
+            [disabled]="!taskForm.form.valid"
+            (click)="updateTask()">
+            Save
+        </button>
+        <button 
+            type="button" 
+            class="btn btn-default btn-warning"
+            (click)="clearTask(); hideTaskForm(); taskForm.reset()">
+            Cancel
+        </button>
+      </div>
+    </form>
+    
+    <div class="table-responsive col-sm-12">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Task ID</th>
+                    <th>Task Name</th>
+                    <th>Created Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let task of tasks">
+                    <td>{{task.taskId}}</td>
+                    <td>{{task.name}}</td>
+                    <td>{{task.created_date}}</td>
+                    <td>{{task.status}}</td>                     
+                    <td>
+                        <button 
+                            class="btn btn-default btn-success"
+                            (click)="showFormForUpdate(task)">
+                            Update
+                        </button>
+                        <button 
+                            class="btn btn-default btn-danger"
+                            (click)="removeTask(task.taskId)">
+                            Remove
+                        </button>
+                    </td>                     
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
